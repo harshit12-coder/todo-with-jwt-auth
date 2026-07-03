@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+</head>
+<body>
+    <h1>SignUp</h1>
+    <input type="text" id="username" placeholder="username">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="SignUp()">SignUp</button>
+    
+    <p id="message"></p>
+
+    <script>
+        async function SignUp() {
+            // Email aur password lo
+            const username=document.getElementById("username").value
+            const email = document.getElementById("email").value
+            const password = document.getElementById("password").value
+            
+            // API call karo
+            const response = await fetch("http://localhost:8000/auth/signup", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({username,email, password})
+            })
+            
+            const data = await response.json()
+            
+            if (response.ok) {
+                window.location.href = "index.html"
+            } else {
+                document.getElementById("message").innerText = "SignUp failed"
+            }
+        }
+    </script>
+</body>
+</html>

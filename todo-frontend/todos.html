@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Todos</title>
+</head>
+<body>
+    <h1>My Todos</h1>
+    
+    <!-- Naya todo add karo -->
+    <input type="text" id="todoInput" placeholder="Naya todo...">
+    <button onclick="addTodo()">Add</button>
+    
+    <!-- Logout -->
+    <button onclick="logout()">Logout</button>
+    
+    <!-- Todos list yahan aayegi -->
+    <ul id="todoList"></ul>
+
+    <script>
+        // Page load hote hi
+        window.onload = function() {
+            checkToken()
+            fetchTodos()
+        }
+        
+        function checkToken() {
+            const token = localStorage.getItem("access_token")
+            if (!token) {
+                window.location.href = "index.html"
+            }
+        }
+        
+        async function fetchTodos() {
+            // Token lo
+            const token=localStorage.getItem("access_token")
+            // API call karo
+             const response = await fetch("http://localhost:8000/todos/", {
+                method: "GET",
+                headers: {"Authorization": `Bearer ${token}`},
+                // body: JSON.stringify({token})
+            })
+            // Todos dikhao
+            data=await response.json()
+ // Yahan hona chahiye — fetchTodos ke andar
+    const todoList = document.getElementById("todoList")
+    todoList.innerHTML = ""
+    
+data.data.forEach(todo => {
+    const li = document.createElement("li")
+    
+    // Title
+    const span = document.createElement("span")
+    span.innerText = todo.title
+    
+    // Edit button
+    const editBtn = document.createElement("button")
+    editBtn.innerText = "Edit"
+    editBtn.onclick = () => showEditForm(todo.id, todo.title)
+    
+    // Delete button
+    const deleteBtn = document.createElement("button")
+    deleteBtn.innerText = "Delete"
+    deleteBtn.onclick = () => deleteTodo(todo.id)
+    
+    li.appendChild(span)
+    li.appendChild(editBtn)
+    li.appendChild(deleteBtn)
+    todoList.appendChild(li)
+})
+        }
+        
+        async function addTodo() {
+            // Input se title lo
+            const title=document.getElementById("todoInput").value
+            // API call karo
+            token=localStorage.getItem("access_token")
+            const response=await fetch("http://localhost:8000/todos/",{
+                method:"POST",
+                headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+},
+                body:JSON.stringify({title})
+            })
+            // List refresh karo
+            // title.innerText=""
+            document.getElementById("todoInput").value = ""
+            fetchTodos()
+        }
+        
+        function logout() {
+            // Token hatao
+            localStorage.removeItem("access_token")
+            // Login page pe jao
+            window.location.href="index.html"
+        }
+        async function deleteTodo(id) {
+    const token = localStorage.getItem("access_token")
+    await fetch(`http://localhost:8000/todos/${id}`, {
+        method: "DELETE",
+        headers: {"Authorization": `Bearer ${token}`}
+    })
+    fetchTodos()  // List refresh karo
+}
+function showEditForm(id, currentTitle) {
+    const newTitle = prompt("Naya title:", currentTitle)
+    if (newTitle) {
+        updateTodo(id, newTitle)
+    }
+    
+}
+async function updateTodo(id, newTitle) {
+    // Token lo
+    const token=localStorage.getItem("access_token")
+    // PATCH /todos/{id}
+    const response=await fetch(`http://localhost:8000/todos/${id}`,{
+        method:"PATCH",
+        headers:{
+            "Authorization":`Bearer ${token}`,
+            "Content-Type":"application/json", 
+        },
+        body:JSON.stringify({title:newTitle})
+    })
+    // Body mein: {title: newTitle}
+    fetchTodos() 
+}
+    </script>
+</body>
+</html>
