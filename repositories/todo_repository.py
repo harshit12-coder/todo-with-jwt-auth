@@ -60,3 +60,15 @@ def delete_todo(id:int,user_id:int):
     conn.commit()
     conn.close()
     return rows_affected
+
+def delete_all_todos_repo(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        delete FROM todos 
+        WHERE user_id=?
+    """, (user_id,))
+    rows_affected=cursor.rowcount
+    conn.commit()
+    conn.close()
+    return rows_affected

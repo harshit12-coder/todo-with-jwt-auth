@@ -1,4 +1,4 @@
-from repositories.todo_repository import create_todo,update_todo,delete_todo,get_todos_by_user
+from repositories.todo_repository import create_todo,update_todo,delete_todo,get_todos_by_user,delete_all_todos_repo
 from fastapi import HTTPException
 def create_todo_service(title:str,user_id:int):
     if title.strip() == "":
@@ -28,4 +28,6 @@ def get_all_todos_service(user_id:int):
     ]
 
 
-
+def delete_all_todos_service(user_id:int):
+    rows_affected=delete_all_todos_repo(user_id)
+    return rows_affected

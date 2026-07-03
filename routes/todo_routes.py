@@ -5,7 +5,8 @@ from services.todo_service import (
     create_todo_service,
     update_todo_service, 
     delete_todo_service,
-    get_all_todos_service
+    get_all_todos_service,
+    delete_all_todos_service
 )
 from core.security import verify_token
 
@@ -44,3 +45,9 @@ def delete_todo(todo_id: int, user=Depends(verify_token)):
          return error_response("Something went wrong")
     return success_response("Todo deleted successfully",{"rows_affected":rows_affected})
     
+
+@router.delete("/all")
+def delete_all_todos(user=Depends(verify_token)):
+    user_id=user.get("user_id")
+    rows_affected=delete_all_todos_service(user_id)
+    return success_response("All todos deleted",{"rows_affected":rows_affected})
