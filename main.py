@@ -27,7 +27,7 @@ app.add_middleware(
 # bug fixing
 # DB init
 init_db()
-# Yeh revert karenge
+
 # Global error handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
