@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from db.connection import init_db
-from routes.auth_routes import router as auth_router
-from routes.todo_routes import router as todo_router
+from routes.v1.auth_routes import router as v1_auth_router
+from routes.v1.todo_routes import router as v1_todo_router
 from core.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -45,8 +45,8 @@ async def not_found_handler(request: Request, exc: Exception):
     )
 
 # Routes
-app.include_router(auth_router)
-app.include_router(todo_router)
+app.include_router(v1_auth_router,prefix="/api/v1")
+app.include_router(v1_todo_router,prefix="/api/v1")
 
 @app.get("/")
 def home():
