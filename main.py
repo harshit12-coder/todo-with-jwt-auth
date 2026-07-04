@@ -7,7 +7,7 @@ from routes.todo_routes import router as todo_router
 from core.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-app = FastAPI(title="Jarvis API")
+app = FastAPI(title="Jarvis API - Priya Version")
 
 app.state.limiter=limiter
 
