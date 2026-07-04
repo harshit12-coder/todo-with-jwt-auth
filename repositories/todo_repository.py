@@ -37,17 +37,30 @@ def update_todo(title: str, completed: bool, id: int):
     conn.close()
     return rows_affected
 
-def get_todos_by_user(user_id: int):
+def get_todos_by_user(user_id: int, page: int = 1, limit: int = 5):
     conn = get_connection()
     cursor = conn.cursor()
+    offset = (page - 1) * limit
     cursor.execute("""
         SELECT * FROM todos 
         WHERE user_id = ?
         ORDER BY id DESC
-    """, (user_id,))
+        LIMIT ? OFFSET ?
+    """, (user_id, limit, offset))
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+def get_todos_count(user_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT COUNT(*) FROM todos 
+        WHERE user_id = ?
+    """, (user_id,))
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count
 
 def delete_todo(id:int,user_id:int):
     conn = get_connection()

@@ -23,10 +23,10 @@ def create_todo(request: CreateTodo, user=Depends(verify_token)):
     return success_response("Todo created✅",success)
 
 @router.get("/")
-def get_todos(user=Depends(verify_token)):
+def get_todos(user=Depends(verify_token),page:int=1,limit:int=5):
     # user["user_id"] se todos lo
     user_id=user["user_id"]
-    rows=get_all_todos_service(user_id)
+    rows=get_all_todos_service(user_id,page,limit)
     return success_response("Your todos😀",rows)
 
 @router.patch("/{todo_id}")

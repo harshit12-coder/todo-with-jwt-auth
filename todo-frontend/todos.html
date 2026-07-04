@@ -35,7 +35,7 @@
             // Token lo
             const token=localStorage.getItem("access_token")
             // API call karo
-             const response = await fetch("http://localhost:8000/todos/", {
+             const response = await fetch("http://localhost:8000/api/v1/todos/", {
                 method: "GET",
                 headers: {"Authorization": `Bearer ${token}`},
                 // body: JSON.stringify({token})
@@ -46,7 +46,7 @@
     const todoList = document.getElementById("todoList")
     todoList.innerHTML = ""
     
-data.data.forEach(todo => {
+data.data.todos.forEach(todo => {
     const li = document.createElement("li")
     
     // Title
@@ -75,7 +75,7 @@ data.data.forEach(todo => {
             const title=document.getElementById("todoInput").value
             // API call karo
             token=localStorage.getItem("access_token")
-            const response=await fetch("http://localhost:8000/todos/",{
+            const response=await fetch("http://localhost:8000/api/v1/todos/",{
                 method:"POST",
                 headers: {
     "Authorization": `Bearer ${token}`,
@@ -97,7 +97,7 @@ data.data.forEach(todo => {
         }
         async function deleteTodo(id) {
     const token = localStorage.getItem("access_token")
-    await fetch(`http://localhost:8000/todos/${id}`, {
+    await fetch(`http://localhost:8000/api/v1/todos/${id}`, {
         method: "DELETE",
         headers: {"Authorization": `Bearer ${token}`}
     })
@@ -114,7 +114,7 @@ async function updateTodo(id, newTitle) {
     // Token lo
     const token=localStorage.getItem("access_token")
     // PATCH /todos/{id}
-    const response=await fetch(`http://localhost:8000/todos/${id}`,{
+    const response=await fetch(`http://localhost:8000/api/v1/todos/${id}`,{
         method:"PATCH",
         headers:{
             "Authorization":`Bearer ${token}`,
